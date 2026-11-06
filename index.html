@@ -1,4 +1,12 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Official Pares Tayo site: announcements, release countdown, next update, leaks.">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
 <title>Pares Tayo HQ</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -217,20 +225,10 @@ footer a { color: var(--muted); }
     <div class="leaks" id="leak-list"></div>
   </section>
   <section id="ideas">
-    <div class="sec-head"><div><h2>Suggestion box</h2><p>Got an idea for a new pares, a map spot or a feature? Drop it here and vote for the ones you want most.</p></div>
-      <div class="sort" role="group" aria-label="Sort suggestions"><button type="button" id="sort-top" aria-pressed="true">Top</button><button type="button" id="sort-new" aria-pressed="false">Newest</button></div></div>
-    <div class="suggest-grid">
-      <form class="panel" id="idea-form" autocomplete="off">
-        <h3>Send a suggestion</h3>
-        <label for="idea-title">Your idea</label>
-        <input type="text" id="idea-title" maxlength="80" placeholder="e.g. Add lugaw with egg" required>
-        <label for="idea-cat">Type</label>
-        <select id="idea-cat"><option>Feature</option><option>Food &amp; recipes</option><option>Map</option><option>Bug</option><option>Other</option></select>
-        <label for="idea-body">Details (optional)</label>
-        <textarea id="idea-body" maxlength="500" placeholder="How should it work?"></textarea>
-        <div class="form-foot"><span class="hint" id="idea-hint">Loading the suggestion box…</span><button class="btn btn-gold" type="submit" id="idea-send" disabled>Send</button></div>
-      </form>
-      <div class="ideas" id="idea-list"><div class="empty">Loading suggestions…</div></div>
+    <div class="sec-head"><div><h2>Suggestion box</h2><p>Got an idea for a new pares, a map spot or a feature? Post it on our Roblox community wall. The team reads every one.</p></div></div>
+    <div class="panel" style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between">
+      <span class="hint" style="font-size:16px">Join Unbelibabol Studio on Roblox and drop your suggestion on the wall.</span>
+      <a class="btn btn-gold" href="https://www.roblox.com/communities/398862618" target="_blank" rel="noopener">Post a suggestion</a>
     </div>
   </section>
 </main>
@@ -532,124 +530,10 @@ footer a { color: var(--muted); }
     });
   }
 
-  /* ---------- suggestion box (shared database) ---------- */
-  var db = null, me = null, userApi = null, sortMode = "top";
-  var boxDocs = {}, voteDocs = {}, marks = {};
-  function ideasFlat() {
-    var out = [];
-    Object.keys(boxDocs).forEach(function (owner) { (boxDocs[owner].items || []).forEach(function (it) { out.push(Object.assign({ owner: owner, key: owner + ":" + it.k }, it)); }); });
-    var counts = {};
-    Object.keys(voteDocs).forEach(function (v) { var up = voteDocs[v].up || {}; Object.keys(up).forEach(function (k) { if (up[k]) counts[k] = (counts[k] || 0) + 1; }); });
-    out.forEach(function (i) { i.votes = counts[i.key] || 0; });
-    out.sort(sortMode === "top" ? function (a, b) { return b.votes - a.votes || String(b.at).localeCompare(String(a.at)); } : function (a, b) { return String(b.at).localeCompare(String(a.at)); });
-    return out;
-  }
-  var MARKS = { planned: ["Planned", "mark-planned"], added: ["Added to the game", "mark-added"], no: ["Not this time", "mark-no"] };
-  function renderIdeas() {
-    var list = $("idea-list"); list.textContent = "";
-    var ideas = ideasFlat();
-    if (!ideas.length) { list.appendChild(el("div", "empty", db ? "No suggestions yet. Be the first to send one!" : "Suggestions show here for signed-in visitors.")); return; }
-    var mine = (me && voteDocs[me] && voteDocs[me].up) || {};
-    var ids = ideas.map(function (i) { return i.owner; });
-    var namesP = userApi && userApi.profiles ? userApi.profiles(ids).catch(function () { return {}; }) : Promise.resolve({});
-    ideas.forEach(function (i) {
-      var card = el("article", "idea");
-      var v = el("button", "vote" + (mine[i.key] ? " on" : "")); v.type = "button"; v.setAttribute("aria-label", "Vote for " + i.title);
-      v.appendChild(el("span", null, "▲")); v.appendChild(el("b", null, String(i.votes)));
-      v.disabled = !me; v.onclick = function () { toggleVote(i.key); };
-      card.appendChild(v);
-      var body = el("div"); body.style.minWidth = "0";
-      body.appendChild(el("h4", null, i.title));
-      if (i.body) body.appendChild(el("p", null, i.body));
-      var meta = el("div", "idea-meta");
-      meta.appendChild(el("span", "cat", i.cat || "Other"));
-      var who = el("span", null, ""); meta.appendChild(who);
-      namesP.then(function (ps) { var n = ps && ps[i.owner] && ps[i.owner].name; who.textContent = (n || "A player") + " · " + fmtDate(i.at); });
-      var mk = marks[i.key]; if (mk && MARKS[mk]) meta.appendChild(el("span", "mark " + MARKS[mk][1], MARKS[mk][0]));
-      if (isAdmin) {
-        var sel = el("select"); sel.setAttribute("aria-label", "Mark suggestion"); sel.style.width = "auto"; sel.style.padding = "3px 8px";
-        [["", "No label"], ["planned", "Planned"], ["added", "Added"], ["no", "Not this time"]].forEach(function (o) { var op = el("option", null, o[1]); op.value = o[0]; sel.appendChild(op); });
-        sel.value = mk || ""; sel.onchange = function () { setMark(i.key, sel.value); };
-        meta.appendChild(sel);
-      }
-      if (isAdmin || i.owner === me) { var del = el("button", "btn btn-danger btn-small", "Remove"); del.type = "button"; del.onclick = function () { removeIdea(i); }; meta.appendChild(del); }
-      body.appendChild(meta);
-      card.appendChild(body);
-      list.appendChild(card);
-    });
-  }
-  var writing = false;
-  function writeDoc(ref, data) { return ref.set(data); }
-  function toggleVote(key) {
-    if (!db || !me || writing) return;
-    var up = Object.assign({}, (voteDocs[me] && voteDocs[me].up) || {});
-    if (up[key]) delete up[key]; else up[key] = true;
-    writing = true;
-    writeDoc(db.doc("votes/" + me), { up: up }).catch(function () { toast("Couldn't save your vote."); }).then(function () { writing = false; });
-  }
-  function setMark(key, val) {
-    var next = Object.assign({}, marks); if (val) next[key] = val; else delete next[key];
-    db.doc("meta/marks").set({ m: next }).catch(function () { toast("Couldn't save the label."); });
-  }
-  function removeIdea(i) {
-    var doc = boxDocs[i.owner]; if (!doc) return;
-    var items = (doc.items || []).filter(function (x) { return x.k !== i.k; });
-    db.doc("suggestions/" + i.owner).set({ items: items }).catch(function () { toast("Couldn't remove it."); });
-  }
-  $("sort-top").onclick = function () { sortMode = "top"; this.setAttribute("aria-pressed", "true"); $("sort-new").setAttribute("aria-pressed", "false"); renderIdeas(); };
-  $("sort-new").onclick = function () { sortMode = "new"; this.setAttribute("aria-pressed", "true"); $("sort-top").setAttribute("aria-pressed", "false"); renderIdeas(); };
-  $("idea-form").addEventListener("submit", function (e) {
-    e.preventDefault();
-    if (!db || !me) return;
-    var title = $("idea-title").value.trim(); if (!title) return;
-    var mineDoc = boxDocs[me] || { items: [] };
-    if ((mineDoc.items || []).length >= 10) { toast("You can have up to 10 suggestions. Remove one to add another."); return; }
-    var items = (mineDoc.items || []).concat([{ k: uid(), title: title, body: $("idea-body").value.trim(), cat: $("idea-cat").value, at: new Date().toISOString() }]);
-    var btn = $("idea-send"); btn.disabled = true;
-    db.doc("suggestions/" + me).set({ items: items }).then(function () {
-      $("idea-title").value = ""; $("idea-body").value = ""; toast("Suggestion sent. Salamat!");
-    }).catch(function (err) {
-      toast(err && err.code === "invalid_argument" ? "Your account can't post here yet. Ask the owner for Contributor access." : "Couldn't send it. Try again.");
-    }).then(function () { btn.disabled = false; });
-  });
-  function startDb() {
-    var hint = $("idea-hint");
-    var timer = setTimeout(function () { hint.textContent = "The suggestion box can't be reached right now."; }, 10000);
-    var loaded = function () { clearTimeout(timer); };
-    db.collection("suggestions").onSnapshot(function (snap) {
-      loaded(); boxDocs = {}; snap.docs.forEach(function (d) { boxDocs[d.id] = d.data() || {}; }); renderIdeas();
-    }, function () { loaded(); hint.textContent = "The suggestion box is unavailable right now."; });
-    db.collection("votes").onSnapshot(function (snap) { voteDocs = {}; snap.docs.forEach(function (d) { voteDocs[d.id] = d.data() || {}; }); renderIdeas(); }, function () {});
-    db.doc("meta/marks").onSnapshot(function (snap) { marks = (snap.exists && snap.data() && snap.data().m) || {}; renderIdeas(); }, function () {});
-  }
-
   renderAll();
-  renderIdeas();
 
-  if (window.claude && window.claude.use) {
-    Promise.all([
-      window.claude.use("user").catch(function () { return null; }),
-      window.claude.use("artifact").catch(function () { return null; }),
-      window.claude.use("assets").catch(function () { return null; }),
-      window.claude.use("db").catch(function () { return null; })
-    ]).then(function (r) {
-      userApi = r[0]; artifactApi = r[1]; assetsApi = r[2]; db = r[3];
-      var hint = $("idea-hint");
-      var chain = userApi ? Promise.all([userApi.canEdit().catch(function () { return false; }), userApi.id().catch(function () { return null; }), userApi.can ? userApi.can("data.write").catch(function () { return null; }) : null]) : Promise.resolve([false, null, null]);
-      chain.then(function (v) {
-        isAdmin = !!v[0] && !!artifactApi; me = v[1];
-        if (isAdmin) renderAll();
-        if (!db) { hint.textContent = "Sign in to Claude to send and vote on suggestions."; renderIdeas(); return; }
-        if (!me) { hint.textContent = "Sign in to send and vote on suggestions."; }
-        else if (v[2] === false) { hint.textContent = "You can read and vote once the owner gives you Contributor access."; }
-        else { hint.textContent = "Be specific. Up to 10 per person."; $("idea-send").disabled = false; }
-        startDb();
-      });
-    });
-  } else {
-    $("idea-hint").textContent = "Sign in to Claude to send and vote on suggestions.";
-  }
 })();
 </script>
 
-</body></html>
+</body>
+</html>
