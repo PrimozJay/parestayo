@@ -616,10 +616,15 @@ footer a { color: var(--muted); }
       .catch(function (err) { toast(err.message); })
       .then(function () { btn.disabled = false; });
   });
-  if (location.hash === "#admin" || adminKey) {
-    $("admin-panel").hidden = false; $("admin-key").value = adminKey;
-    $("admin-key").addEventListener("change", function () { adminKey = this.value.trim(); try { localStorage.setItem("pt_admin", adminKey); } catch (e) {} renderIdeas(); });
+  $("admin-key").addEventListener("change", function () { adminKey = this.value.trim(); try { localStorage.setItem("pt_admin", adminKey); } catch (e) {} renderIdeas(); toast(adminKey ? "Moderator mode on" : "Moderator mode off"); });
+  function checkAdmin() {
+    if (location.hash === "#admin" || adminKey) {
+      $("admin-panel").hidden = false; $("admin-key").value = adminKey;
+      if (location.hash === "#admin") $("admin-panel").scrollIntoView({ block: "center" });
+    }
   }
+  window.addEventListener("hashchange", checkAdmin);
+  checkAdmin();
   loadIdeas();
 })();
 </script>
