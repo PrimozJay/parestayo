@@ -91,8 +91,9 @@ button, input, select, textarea { font: inherit; color: inherit; }
 
 /* nav */
 .nav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: rgba(27, 15, 34, .92); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
-.nav .wrap { display: flex; gap: 6px; overflow-x: auto; padding-block: 10px; scrollbar-width: none; }
+.nav .wrap { display: flex; flex-wrap: wrap; gap: 4px 6px; padding-block: 8px; }
 .nav a { flex: none; text-decoration: none; color: var(--muted); font-weight: 600; padding: 7px 14px; border-radius: 999px; }
+@media (max-width: 480px) { .nav a { padding: 6px 10px; font-size: 14px; } .clock { gap: 6px; } .drop { padding: 18px; } .idea { gap: 10px; padding: 12px; } }
 .nav a:hover { color: var(--cream); background: var(--surface); }
 
 /* sections */
@@ -119,7 +120,10 @@ main section { padding-block: 40px 8px; scroll-margin-top: 70px; }
 
 /* roadmap */
 .road { display: grid; gap: 10px; }
-.road-item { display: grid; grid-template-columns: auto 1fr auto; gap: 14px; align-items: center; background: var(--surface); border-radius: 14px; padding: 14px 16px; border: 2px solid var(--line); }
+.road-group { margin: 14px 0 0; font-family: var(--display); font-weight: 400; font-size: 24px; letter-spacing: .03em; color: var(--gold); }
+.road-group:first-child { margin-top: 0; }
+.road-item .dot { background: var(--gold-2); }
+.road-item { display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: center; background: var(--surface); border-radius: 14px; padding: 14px 16px; border: 2px solid var(--line); }
 .road-item .name { font-weight: 600; font-size: 18px; min-width: 0; overflow-wrap: anywhere; }
 .road-item .desc { display: block; font-weight: 400; font-size: 15px; color: var(--muted); }
 .dot { width: 14px; height: 14px; border-radius: 50%; }
@@ -133,7 +137,7 @@ main section { padding-block: 40px 8px; scroll-margin-top: 70px; }
 .leaks { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
 .leak { background: var(--surface); border-radius: var(--radius); overflow: hidden; border: 2px solid var(--line); display: flex; flex-direction: column; }
 .leak-img { position: relative; aspect-ratio: 16 / 10; background: var(--night-2); max-width: 100%; overflow: hidden; }
-.leak-img img { width: 100%; height: 100%; object-fit: cover; display: block; transition: filter .3s ease; }
+.leak-img img { width: 100%; height: 100%; object-fit: contain; display: block; transition: filter .3s ease; }
 .leak.hidden-spoiler .leak-img img { filter: blur(18px) saturate(.6); }
 .reveal { position: absolute; inset: 0; display: grid; place-items: center; background: transparent; border: 0; cursor: pointer; font-family: var(--display); font-size: 22px; color: var(--cream); text-shadow: 0 2px 0 #000; letter-spacing: .04em; }
 .leak:not(.hidden-spoiler) .reveal { display: none; }
@@ -218,23 +222,40 @@ footer a { color: var(--muted); }
   <section id="update">
     <div class="sec-head"><div><h2 id="update-title">Next update</h2><p id="update-sub">What we're cooking for the next update.</p></div><div id="update-tools"></div></div>
     <div class="road" id="road"></div>
-    <div class="legend"><span>● Luto na: done</span><span>● Niluluto: in progress</span><span>● Sa listahan: planned</span></div>
   </section>
   <section id="leaks">
     <div class="sec-head"><div><h2>Leaks</h2><p>Sneak peeks at what's coming. Spoilers are blurred, tap to reveal.</p></div><div id="leak-tools"></div></div>
     <div class="leaks" id="leak-list"></div>
   </section>
   <section id="ideas">
-    <div class="sec-head"><div><h2>Suggestion box</h2><p>Got an idea for a new pares, a map spot or a feature? Post it on our Roblox community wall. The team reads every one.</p></div></div>
-    <div class="panel" style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between">
-      <span class="hint" style="font-size:16px">Join Unbelibabol Studio on Roblox and drop your suggestion on the wall.</span>
-      <a class="btn btn-gold" href="https://www.roblox.com/communities/398862618" target="_blank" rel="noopener">Post a suggestion</a>
+    <div class="sec-head"><div><h2>Suggestion box</h2><p>Got an idea for a new pares, a map spot or a feature? Drop it here and vote for the ones you want most. The team reads every one.</p></div>
+      <div class="sort" role="group" aria-label="Sort suggestions"><button type="button" id="sort-top" aria-pressed="true">Top</button><button type="button" id="sort-new" aria-pressed="false">Newest</button></div></div>
+    <div class="suggest-grid">
+      <form class="panel" id="idea-form" autocomplete="off">
+        <h3>Send a suggestion</h3>
+        <label for="idea-title">Your idea</label>
+        <input type="text" id="idea-title" maxlength="80" placeholder="e.g. Add lugaw with egg" required>
+        <label for="idea-cat">Type</label>
+        <select id="idea-cat"><option>Feature</option><option>Food &amp; recipes</option><option>Map</option><option>Bug</option><option>Other</option></select>
+        <label for="idea-body">Details (optional)</label>
+        <textarea id="idea-body" maxlength="500" placeholder="How should it work?"></textarea>
+        <label for="idea-name">Your Roblox name (optional)</label>
+        <input type="text" id="idea-name" maxlength="24" placeholder="Leave empty to stay anonymous">
+        <div class="form-foot"><span class="hint" id="idea-hint">Be specific. Up to 3 ideas per hour.</span><button class="btn btn-gold" type="submit" id="idea-send">Send</button></div>
+      </form>
+      <div class="ideas" id="idea-list"><div class="empty">Loading suggestions…</div></div>
+    </div>
+    <div class="panel" id="admin-panel" hidden style="margin-top:14px">
+      <h3>Moderator mode</h3>
+      <label for="admin-key">Admin key</label>
+      <input type="text" id="admin-key" placeholder="Paste your admin key">
+      <p class="hint">Hide or label suggestions with the controls on each card.</p>
     </div>
   </section>
 </main>
 <footer class="wrap">Pares Tayo by <a href="https://www.roblox.com/communities/398862618" target="_blank" rel="noopener">Unbelibabol Studio</a> · Luto, serve, at kumita sa sariling paresan!</footer>
 </div>
-<script type="application/json" id="state">{"countdown":{"title":"Update 1","at":"","note":"Kusina, recipes and the Palengke are on the stove."},"update":{"title":"Update 1","sub":"What we're cooking for the next update.","items":[{"id":"u1","name":"Kusina","desc":"Your own kitchen at the stall.","status":"cooking"},{"id":"u2","name":"Recipe system","desc":"Cook new dishes from recipes.","status":"cooking"},{"id":"u3","name":"Palengke","desc":"The market where you buy your ingredients.","status":"cooking"},{"id":"u4","name":"Bagal","desc":"","status":"cooking"},{"id":"u5","name":"Dali","desc":"","status":"cooking"}]},"news":[],"leaks":[]}</script>
+<script type="application/json" id="state">{"countdown": {"title": "Update 1", "at": "", "note": "Palengke, new recipes, Bagal, workers and new pares are on the stove."}, "update": {"title": "Update 1", "sub": "Everything coming in Update 1, plus the Christmas update right after.", "items": [{"id": "u1", "group": "Update 1", "name": "Palengke", "desc": "The market where you buy your ingredients."}, {"id": "u2", "group": "Update 1", "name": "New recipe system", "desc": "Cook new dishes from recipes."}, {"id": "u3", "group": "Update 1", "name": "Bagal (Dali store)", "desc": "A Dali store to shop at."}, {"id": "u4", "group": "Update 1", "name": "Workers", "desc": "Hire help for your paresan: OJT, working students and more."}, {"id": "u5", "group": "Update 1", "name": "Iba't ibang pares", "desc": "Lechon pares, bulaklak pares and pares overload."}, {"id": "u6", "group": "Update 1.5", "name": "Christmas update", "desc": "Pasko na sa paresan!"}]}, "news": [], "leaks": [{"id": "l1", "title": "Gasul Express", "caption": "Order gasul and get it delivered fast. Rare, Epic and more tanks to collect.", "img": "images/leaks/gasul-express.jpg", "spoiler": false, "at": "2026-11-07T08:10:00.000Z"}, {"id": "l2", "title": "Someone parked in front of you...", "caption": "Who is this mystery driver? Watch out for the Never Grow Again event.", "img": "images/leaks/someone-parked.jpg", "spoiler": true, "at": "2026-11-07T08:10:00.000Z"}, {"id": "l3", "title": "Chingchang Diwata event", "caption": "She visits every paresan. +5% Petot on every sale while she's around.", "img": "images/leaks/chingchang-diwata.jpg", "spoiler": false, "at": "2026-11-07T08:10:00.000Z"}, {"id": "l4", "title": "Igiling mo boy event", "caption": "Every 30s there's a 10% chance a DEV eats at your paresan. Serve them for ₱5,000!", "img": "images/leaks/igiling-mo-boy.jpg", "spoiler": false, "at": "2026-11-07T08:10:00.000Z"}, {"id": "l5", "title": "A busy night at the paresan", "caption": "Sikat customers, full tables and pares on every tray.", "img": "images/leaks/busy-paresan.jpg", "spoiler": false, "at": "2026-11-07T08:10:00.000Z"}]}</script>
 <script id="app-js">
 (function () {
   "use strict";
@@ -296,7 +317,7 @@ footer a { color: var(--muted); }
     if (c.note) box.appendChild(el("p", "drop-note", c.note));
     /* bowl meter: how much of the roadmap is cooked */
     var items = state.update.items || [];
-    if (items.length) {
+    if (items.some(function (it) { return it.status; })) {
       var score = 0; items.forEach(function (it) { score += it.status === "done" ? 1 : it.status === "cooking" ? 0.5 : 0; });
       var pct = Math.round(score / items.length * 100);
       var m = el("div", "bowl-meter");
@@ -340,21 +361,28 @@ footer a { color: var(--muted); }
   /* roadmap */
   function renderRoad() {
     var u = state.update;
-    $("update-title").textContent = u.title ? "Next update: " + u.title : "Next update";
+    $("update-title").textContent = "Next update";
     $("update-sub").textContent = u.sub || "What we're cooking for the next update.";
     var tools = $("update-tools"); tools.textContent = "";
     if (isAdmin) { var b = el("button", "btn btn-gold btn-small", "Edit roadmap"); b.type = "button"; b.onclick = editRoad; tools.appendChild(b); }
     var list = $("road"); list.textContent = "";
     if (!(u.items || []).length) { list.appendChild(el("div", "empty", "The roadmap for the next update will show up here.")); return; }
+    var groups = [], byName = {};
     u.items.forEach(function (it) {
-      var st = STATUS[it.status] ? it.status : "planned";
-      var row = el("div", "road-item st-" + st);
-      row.appendChild(el("span", "dot"));
-      var name = el("div", "name", it.name);
-      if (it.desc) name.appendChild(el("span", "desc", it.desc));
-      row.appendChild(name);
-      row.appendChild(el("span", "chip", STATUS[st]));
-      list.appendChild(row);
+      var g = it.group || u.title || "Next update";
+      if (!byName[g]) { byName[g] = []; groups.push(g); }
+      byName[g].push(it);
+    });
+    groups.forEach(function (g) {
+      list.appendChild(el("h3", "road-group", g));
+      byName[g].forEach(function (it) {
+        var row = el("div", "road-item");
+        row.appendChild(el("span", "dot"));
+        var name = el("div", "name", it.name);
+        if (it.desc) name.appendChild(el("span", "desc", it.desc));
+        row.appendChild(name);
+        list.appendChild(row);
+      });
     });
   }
 
@@ -531,7 +559,68 @@ footer a { color: var(--muted); }
   }
 
   renderAll();
-
+  /* ---------- suggestion box (Cloudflare Pages Functions + D1) ---------- */
+  var sortMode = "top", ideas = [], adminKey = "";
+  try { adminKey = localStorage.getItem("pt_admin") || ""; } catch (e) {}
+  var MARKS = { planned: ["Planned", "mark-planned"], added: ["Added to the game", "mark-added"], no: ["Not this time", "mark-no"] };
+  function api(path, body) {
+    return fetch("/api/" + path, body ? { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) } : {})
+      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { if (!r.ok) throw new Error(d.error || "Something went wrong."); return d; }); });
+  }
+  function renderIdeas() {
+    var list = $("idea-list"); list.textContent = "";
+    if (!ideas.length) { list.appendChild(el("div", "empty", "No suggestions yet. Be the first to send one!")); return; }
+    ideas.forEach(function (i) {
+      var card = el("article", "idea");
+      var v = el("button", "vote" + (i.voted ? " on" : "")); v.type = "button"; v.setAttribute("aria-label", "Vote for " + i.title);
+      v.appendChild(el("span", null, "▲")); var count = el("b", null, String(i.votes)); v.appendChild(count);
+      v.onclick = function () {
+        v.disabled = true;
+        api("vote", { id: i.id }).then(function (d) { i.voted = d.voted; i.votes = d.votes; v.classList.toggle("on", d.voted); count.textContent = String(d.votes); })
+          .catch(function (e) { toast(e.message); }).then(function () { v.disabled = false; });
+      };
+      card.appendChild(v);
+      var body = el("div"); body.style.minWidth = "0";
+      body.appendChild(el("h4", null, i.title));
+      if (i.body) body.appendChild(el("p", null, i.body));
+      var meta = el("div", "idea-meta");
+      meta.appendChild(el("span", "cat", i.cat || "Other"));
+      meta.appendChild(el("span", null, (i.name || "A player") + " · " + fmtDate(i.created)));
+      if (i.status && MARKS[i.status]) meta.appendChild(el("span", "mark " + MARKS[i.status][1], MARKS[i.status][0]));
+      if (adminKey) {
+        var sel = el("select"); sel.setAttribute("aria-label", "Label suggestion"); sel.style.width = "auto"; sel.style.padding = "3px 8px";
+        [["", "No label"], ["planned", "Planned"], ["added", "Added"], ["no", "Not this time"]].forEach(function (o) { var op = el("option", null, o[1]); op.value = o[0]; sel.appendChild(op); });
+        sel.value = i.status || "";
+        sel.onchange = function () { api("admin", { key: adminKey, id: i.id, action: "status", status: sel.value }).then(loadIdeas).catch(function (e) { toast(e.message); }); };
+        var hide = el("button", "btn btn-danger btn-small", "Hide"); hide.type = "button";
+        hide.onclick = function () { api("admin", { key: adminKey, id: i.id, action: "hide" }).then(loadIdeas).catch(function (e) { toast(e.message); }); };
+        meta.appendChild(sel); meta.appendChild(hide);
+      }
+      body.appendChild(meta);
+      card.appendChild(body);
+      list.appendChild(card);
+    });
+  }
+  function loadIdeas() {
+    return api("suggestions?sort=" + sortMode).then(function (d) { ideas = d.items || []; renderIdeas(); })
+      .catch(function (e) { $("idea-list").textContent = ""; $("idea-list").appendChild(el("div", "empty", (e instanceof TypeError || !e.message) ? "The suggestion box can't be reached right now. Try again later." : e.message)); });
+  }
+  $("sort-top").onclick = function () { sortMode = "top"; this.setAttribute("aria-pressed", "true"); $("sort-new").setAttribute("aria-pressed", "false"); loadIdeas(); };
+  $("sort-new").onclick = function () { sortMode = "new"; this.setAttribute("aria-pressed", "true"); $("sort-top").setAttribute("aria-pressed", "false"); loadIdeas(); };
+  $("idea-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var title = $("idea-title").value.trim(); if (!title) return;
+    var btn = $("idea-send"); btn.disabled = true;
+    api("suggestions", { title: title, body: $("idea-body").value.trim(), cat: $("idea-cat").value, name: $("idea-name").value.trim() })
+      .then(function () { $("idea-title").value = ""; $("idea-body").value = ""; toast("Suggestion sent. Salamat!"); sortMode = "new"; $("sort-new").setAttribute("aria-pressed", "true"); $("sort-top").setAttribute("aria-pressed", "false"); return loadIdeas(); })
+      .catch(function (err) { toast(err.message); })
+      .then(function () { btn.disabled = false; });
+  });
+  if (location.hash === "#admin" || adminKey) {
+    $("admin-panel").hidden = false; $("admin-key").value = adminKey;
+    $("admin-key").addEventListener("change", function () { adminKey = this.value.trim(); try { localStorage.setItem("pt_admin", adminKey); } catch (e) {} renderIdeas(); });
+  }
+  loadIdeas();
 })();
 </script>
 
