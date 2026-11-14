@@ -3,12 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="description" content="Official Pares Tayo site: announcements, release countdown, next update, leaks.">
+<meta name="description" content="Official Pares Tayo site: announcements, next update and leaks.">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 </head>
 <body>
 <title>Pares Tayo HQ</title>
-<meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Fredoka:wght@400;500;600;700&display=swap">
 <style id="css">
@@ -194,6 +193,9 @@ footer a { color: var(--muted); }
   .road-edit { grid-template-columns: 1fr 1fr; }
   .road-edit input { grid-column: 1 / -1; }
 }
+/* hidden for now: release countdown + suggestion box */
+#drop, #ideas { display: none !important; }
+.hero-grid { grid-template-columns: 1fr !important; }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 </style>
 <div id="site">
@@ -202,7 +204,7 @@ footer a { color: var(--muted); }
   <div class="wrap hero-grid">
     <div>
       <h1 class="brand"><span class="p">PARES</span><span class="t">TAYO</span></h1>
-      <p class="tagline">The official home of Pares Tayo on Roblox. News, the next update, sneak peeks and your ideas, all in one paresan.</p>
+      <p class="tagline">The official home of Pares Tayo on Roblox. News, the next update and sneak peeks, all in one paresan.</p>
       <div class="hero-actions">
         <a class="btn btn-play" href="https://www.roblox.com/games/113000444936805" target="_blank" rel="noopener">PLAY NOW</a>
         <a class="btn btn-ghost" href="https://www.roblox.com/communities/398862618" target="_blank" rel="noopener">Join Unbelibabol Studio</a>
@@ -212,7 +214,7 @@ footer a { color: var(--muted); }
   </div>
 </header>
 <nav class="nav" aria-label="Sections"><div class="wrap">
-  <a href="#news">Announcements</a><a href="#update">Next update</a><a href="#leaks">Leaks</a><a href="#ideas">Suggestion box</a>
+  <a href="#news">Announcements</a><a href="#update">Next update</a><a href="#leaks">Leaks</a>
 </div></nav>
 <main class="wrap">
   <section id="news">
@@ -259,7 +261,7 @@ footer a { color: var(--muted); }
 <script id="app-js">
 (function () {
   "use strict";
-  var HEAD = '<title>Pares Tayo HQ</title>\n<meta name="claude:viewport-fit-sides" content="cover">\n<link rel="preconnect" href="https://fonts.googleapis.com">\n<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Fredoka:wght@400;500;600;700&display=swap">\n';
+  var HEAD = '<title>Pares Tayo HQ</title>\n<link rel="preconnect" href="https://fonts.googleapis.com">\n<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Fredoka:wght@400;500;600;700&display=swap">\n';
   var RESET = ':root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}';
   var CSS = document.getElementById("css").textContent;
   var SITE = document.getElementById("site").innerHTML;
@@ -625,7 +627,7 @@ footer a { color: var(--muted); }
   }
   window.addEventListener("hashchange", checkAdmin);
   checkAdmin();
-  loadIdeas();
+  /* loadIdeas(); suggestion box hidden for now */
 })();
 </script>
 
