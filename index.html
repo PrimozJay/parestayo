@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="description" content="Official Pares Tayo site: announcements, next update and leaks.">
+<meta name="description" content="Official Pares Tayo site: announcements, next update, leaks and suggestions.">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 </head>
 <body>
@@ -182,7 +182,6 @@ footer a { color: var(--muted); }
   .road-edit { grid-template-columns: 1fr 1fr; }
   .road-edit input { grid-column: 1 / -1; }
 }
-#ideas { display: none !important; }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 </style>
 <div id="site">
@@ -191,7 +190,7 @@ footer a { color: var(--muted); }
   <div class="wrap hero-grid">
     <div>
       <h1 class="brand"><span class="p">PARES</span><span class="t">TAYO</span></h1>
-      <p class="tagline"><strong>Ang sarili mong paresan!</strong><br>The official home of Pares Tayo on Roblox. News, the next update and sneak peeks, all in one paresan.</p>
+      <p class="tagline"><strong>Ang sarili mong paresan!</strong><br>The official home of Pares Tayo on Roblox. News, the next update, sneak peeks and your ideas, all in one paresan.</p>
       <div class="hero-actions">
         <a class="btn btn-play" href="https://www.roblox.com/games/113000444936805" target="_blank" rel="noopener">PLAY NOW</a>
         <a class="btn btn-ghost" href="https://www.roblox.com/communities/398862618" target="_blank" rel="noopener">Join Unbelibabol Studio</a>
@@ -201,7 +200,7 @@ footer a { color: var(--muted); }
   </div>
 </header>
 <nav class="nav" aria-label="Sections"><div class="wrap">
-  <a href="#news">Announcements</a><a href="#update">Next update</a><a href="#leaks">Leaks</a>
+  <a href="#news">Announcements</a><a href="#update">Next update</a><a href="#leaks">Leaks</a><a href="#ideas">Suggestion box</a>
 </div></nav>
 <main class="wrap">
   <section id="news">
@@ -606,6 +605,7 @@ footer a { color: var(--muted); }
   }
   window.addEventListener("hashchange", checkAdmin);
   checkAdmin();
+  loadIdeas();
 })();
 </script>
 
