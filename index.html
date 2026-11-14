@@ -175,6 +175,22 @@ textarea { min-height: 96px; resize: vertical; }
 footer { padding-block: 50px 90px; color: var(--muted); font-size: 14px; text-align: center; }
 footer a { color: var(--muted); }
 
+/* npc applications */
+.npc-intro p { margin: 0 0 10px; color: var(--muted); }
+.npc-intro ul { margin: 0; padding-left: 20px; color: var(--muted); }
+.npc-intro li { margin-bottom: 6px; }
+.radio-row { display: flex; flex-wrap: wrap; gap: 14px; }
+.radio-row label, .check { cursor: pointer; }
+.radio-row label { display: inline-flex; align-items: center; gap: 6px; margin: 0; color: var(--cream); font-weight: 500; }
+.req { color: var(--gold); }
+.apps { display: grid; gap: 10px; margin-top: 12px; }
+.app { background: var(--night-2); border: 2px solid var(--line); border-radius: 14px; padding: 14px; min-width: 0; }
+.app h4 { margin: 0; font-size: 18px; overflow-wrap: anywhere; }
+.app dl { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin: 8px 0 0; font-size: 15px; }
+.app dt { color: var(--muted); }
+.app dd { margin: 0; overflow-wrap: anywhere; }
+.mark-tanggap { background: rgba(127, 224, 138, .18); color: var(--good); }
+.mark-hindi { background: rgba(255, 110, 106, .15); color: #ff9b9b; }
 @media (max-width: 820px) {
   .hero-grid, .suggest-grid { grid-template-columns: 1fr; }
   .road-item { grid-template-columns: auto 1fr; }
@@ -200,7 +216,7 @@ footer a { color: var(--muted); }
   </div>
 </header>
 <nav class="nav" aria-label="Sections"><div class="wrap">
-  <a href="#news">Announcements</a><a href="#update">Next update</a><a href="#leaks">Leaks</a><a href="#ideas">Suggestion box</a>
+  <a href="#news">Announcements</a><a href="#update">Next update</a><a href="#leaks">Leaks</a><a href="#ideas">Suggestion box</a><a href="#npc">Apply bilang NPC</a>
 </div></nav>
 <main class="wrap">
   <section id="news">
@@ -237,7 +253,44 @@ footer a { color: var(--muted); }
       <h3>Moderator mode</h3>
       <label for="admin-key">Admin key</label>
       <input type="text" id="admin-key" placeholder="Paste your admin key">
-      <p class="hint">Hide or label suggestions with the controls on each card.</p>
+      <p class="hint">Hide or label suggestions with the controls on each card. NPC applications show at the bottom of the NPC section.</p>
+    </div>
+  </section>
+  <section id="npc">
+    <div class="sec-head"><div><h2>Mag-apply para maging NPC</h2><p>Gusto mo bang makita ang avatar mo sa paresan? Sagutan mo lang ito!</p></div></div>
+    <div class="suggest-grid">
+      <form class="panel" id="npc-form" autocomplete="off">
+        <h3>Application form</h3>
+        <label for="npc-user">1. Ano ang Roblox username mo? <span class="req">*</span></label>
+        <input type="text" id="npc-user" maxlength="20" placeholder="e.g. Juan_Pares123" required>
+        <label for="npc-display">2. Anong pangalan ang gusto mong lumabas sa NPC mo?</label>
+        <input type="text" id="npc-display" maxlength="20" placeholder="Display name o palayaw">
+        <label for="npc-role">3. Anong klaseng NPC ang gusto mo? <span class="req">*</span></label>
+        <select id="npc-role" required><option value="">Pumili…</option><option>Suki na customer</option><option>Tindero/Tindera sa Palengke</option><option>Jeepney driver</option><option>Tricycle driver</option><option>Tambay sa kanto</option><option>Iba pa</option></select>
+        <label for="npc-fav">4. Ano ang paborito mong order sa paresan? <span class="req">*</span></label>
+        <select id="npc-fav" required><option value="">Pumili…</option><option>Pares</option><option>Pares overload</option><option>Pares na may extra sabaw</option><option value="Kanin lang">Kanin lang 😅</option></select>
+        <label for="npc-line">5. Ano ang sasabihin ng NPC mo? <span class="req">*</span></label>
+        <input type="text" id="npc-line" maxlength="60" placeholder="e.g. Isang pares nga, extra sabaw!" required>
+        <label for="npc-why">6. Bakit ikaw dapat ang maging NPC?</label>
+        <textarea id="npc-why" maxlength="300" placeholder="Maikling sagot lang"></textarea>
+        <label id="npc-member-l">7. Member ka ba ng Unbelibabol Studio group sa Roblox?</label>
+        <div class="radio-row" role="radiogroup" aria-labelledby="npc-member-l"><label><input type="radio" name="npc-member" value="1"> Oo</label><label><input type="radio" name="npc-member" value="0" checked> Hindi pa</label></div>
+        <label class="check"><input type="checkbox" id="npc-agree" required> Pumapayag ako na gamitin ang avatar at username ko bilang NPC sa laro. <span class="req">*</span></label>
+        <div class="form-foot"><span class="hint">Isang application lang bawat tao.</span><button class="btn btn-gold" type="submit" id="npc-send">Ipadala ang application</button></div>
+      </form>
+      <div class="panel npc-intro">
+        <h3>Paano ito gumagana?</h3>
+        <p>Pumipili ang team ng mga player na magiging NPC sa Pares Tayo. Puwede kang lumabas bilang suki, tindero sa Palengke, driver o tambay!</p>
+        <ul>
+          <li>Roblox username lang ang kailangan. Huwag ilagay ang totoong pangalan, edad o contact mo.</li>
+          <li>Ang linya ng NPC mo ay makikita sa laro, kaya dapat mabait at walang bad words.</li>
+          <li>Abangan sa Announcements kung napili ka sa susunod na update!</li>
+        </ul>
+      </div>
+    </div>
+    <div class="panel" id="npc-admin" hidden style="margin-top:14px">
+      <div class="sec-head" style="margin:0"><h3 style="margin:0">NPC applications <span class="hint" id="npc-count"></span></h3><button class="btn btn-ghost btn-small" type="button" id="npc-refresh">Refresh</button></div>
+      <div class="apps" id="npc-list"></div>
     </div>
   </section>
 </main>
@@ -596,7 +649,49 @@ footer a { color: var(--muted); }
       .catch(function (err) { toast(err.message); })
       .then(function () { btn.disabled = false; });
   });
-  $("admin-key").addEventListener("change", function () { adminKey = this.value.trim(); try { localStorage.setItem("pt_admin", adminKey); } catch (e) {} renderIdeas(); toast(adminKey ? "Moderator mode on" : "Moderator mode off"); });
+  /* npc applications */
+  var NPC_MARKS = { tanggap: ["Tanggap", "mark-tanggap"], hindi: ["Hindi muna", "mark-hindi"] };
+  $("npc-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var btn = $("npc-send"); btn.disabled = true;
+    var mem = document.querySelector('input[name="npc-member"]:checked');
+    api("npc", { username: $("npc-user").value.trim(), display: $("npc-display").value.trim(), role: $("npc-role").value, fav: $("npc-fav").value, line: $("npc-line").value.trim(), why: $("npc-why").value.trim(), member: mem && mem.value === "1", agree: $("npc-agree").checked })
+      .then(function () { $("npc-form").reset(); toast("Salamat! Natanggap na namin ang application mo."); if (adminKey) loadNpc(); })
+      .catch(function (err) { toast(err.message); })
+      .then(function () { btn.disabled = false; });
+  });
+  function loadNpc() {
+    var box = $("npc-admin");
+    if (!adminKey) { box.hidden = true; return; }
+    box.hidden = false;
+    var list = $("npc-list");
+    api("npc-list", { key: adminKey }).then(function (d) {
+      list.textContent = "";
+      var items = d.items || [];
+      $("npc-count").textContent = "(" + items.length + ")";
+      if (!items.length) { list.appendChild(el("div", "empty", "Wala pang application.")); return; }
+      items.forEach(function (a) {
+        var card = el("article", "app");
+        card.appendChild(el("h4", null, a.username + (a.display ? " · " + a.display : "")));
+        var dl = el("dl");
+        [["NPC", a.role], ["Paborito", a.fav], ["Linya", "“" + a.line + "”"], ["Bakit", a.why || "—"], ["Group member", a.member ? "Oo" : "Hindi pa"], ["Petsa", fmtDate(a.created)]].forEach(function (r) { dl.appendChild(el("dt", null, r[0])); dl.appendChild(el("dd", null, r[1])); });
+        card.appendChild(dl);
+        var meta = el("div", "idea-meta");
+        if (a.status && NPC_MARKS[a.status]) meta.appendChild(el("span", "mark " + NPC_MARKS[a.status][1], NPC_MARKS[a.status][0]));
+        var sel = el("select"); sel.setAttribute("aria-label", "Status ng application"); sel.style.width = "auto"; sel.style.padding = "3px 8px";
+        [["", "Bago"], ["tanggap", "Tanggap"], ["hindi", "Hindi muna"]].forEach(function (o) { var op = el("option", null, o[1]); op.value = o[0]; sel.appendChild(op); });
+        sel.value = a.status || "";
+        sel.onchange = function () { api("admin", { key: adminKey, id: a.id, action: "npc-status", status: sel.value }).then(loadNpc).catch(function (e) { toast(e.message); }); };
+        var del = el("button", "btn btn-danger btn-small", "Delete"); del.type = "button";
+        del.onclick = function () { if (del.dataset.sure) { api("admin", { key: adminKey, id: a.id, action: "npc-delete" }).then(loadNpc).catch(function (e) { toast(e.message); }); } else { del.dataset.sure = "1"; del.textContent = "Sure? Click again"; } };
+        meta.appendChild(sel); meta.appendChild(del);
+        card.appendChild(meta);
+        list.appendChild(card);
+      });
+    }).catch(function (e) { list.textContent = ""; list.appendChild(el("div", "empty", e.message)); });
+  }
+  $("npc-refresh").onclick = loadNpc;
+  $("admin-key").addEventListener("change", function () { adminKey = this.value.trim(); try { localStorage.setItem("pt_admin", adminKey); } catch (e) {} renderIdeas(); loadNpc(); toast(adminKey ? "Moderator mode on" : "Moderator mode off"); });
   function checkAdmin() {
     if (location.hash === "#admin" || adminKey) {
       $("admin-panel").hidden = false; $("admin-key").value = adminKey;
@@ -606,6 +701,7 @@ footer a { color: var(--muted); }
   window.addEventListener("hashchange", checkAdmin);
   checkAdmin();
   loadIdeas();
+  loadNpc();
 })();
 </script>
 

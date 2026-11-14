@@ -2,6 +2,9 @@ const CATS = ["Feature", "Food & recipes", "Map", "Bug", "Other"];
 const STATUSES = ["", "planned", "added", "no"];
 const BAD = ["tangina", "putang", "gago", "fuck", "shit", "bitch", "nigg", "puta", "ulol", "pakyu"];
 const MAX_PER_HOUR = 3;
+const NPC_ROLES = ["Suki na customer", "Tindero/Tindera sa Palengke", "Jeepney driver", "Tricycle driver", "Tambay sa kanto", "Iba pa"];
+const NPC_FAVS = ["Pares", "Pares overload", "Pares na may extra sabaw", "Kanin lang"];
+const NPC_STATUSES = ["", "tanggap", "hindi"];
 
 let ready = false;
 async function init(db) {
@@ -10,6 +13,7 @@ async function init(db) {
     db.prepare("CREATE TABLE IF NOT EXISTS suggestions (id TEXT PRIMARY KEY, title TEXT NOT NULL, body TEXT, cat TEXT, name TEXT, author TEXT, created INTEGER, votes INTEGER DEFAULT 0, status TEXT DEFAULT '', hidden INTEGER DEFAULT 0)"),
     db.prepare("CREATE TABLE IF NOT EXISTS votes (sid TEXT, voter TEXT, PRIMARY KEY (sid, voter))"),
     db.prepare("CREATE TABLE IF NOT EXISTS posts (voter TEXT, at INTEGER)"),
+    db.prepare("CREATE TABLE IF NOT EXISTS npc_apps (id TEXT PRIMARY KEY, username TEXT NOT NULL, display TEXT, role TEXT, fav TEXT, line TEXT, why TEXT, member INTEGER DEFAULT 0, voter TEXT, created INTEGER, status TEXT DEFAULT '')"),
   ]);
   ready = true;
 }
@@ -97,11 +101,44 @@ export async function onRequest(context) {
       return json({ ok: true, voted: !had, votes: row?.votes || 0 });
     }
 
+    if (route === "npc" && method === "POST") {
+      const body = await request.json().catch(() => ({}));
+      const username = clean(body.username, 20);
+      const display = clean(body.display, 20);
+      const role = NPC_ROLES.includes(body.role) ? body.role : "";
+      const fav = NPC_FAVS.includes(body.fav) ? body.fav : "";
+      const line = clean(body.line, 60);
+      const why = clean(body.why, 300);
+      if (!/^[A-Za-z0-9_]{3,20}$/.test(username)) return json({ error: "Ilagay ang tamang Roblox username (3-20 letra, numero o _)." }, 400);
+      if (!role) return json({ error: "Pumili kung anong klaseng NPC ang gusto mo." }, 400);
+      if (!fav) return json({ error: "Pumili ng paborito mong order." }, 400);
+      if (line.length < 2) return json({ error: "Isulat ang sasabihin ng NPC mo." }, 400);
+      if (!body.agree) return json({ error: "Kailangan mong pumayag na gamitin ang avatar at username mo." }, 400);
+      const bad = blocked(username + " " + display + " " + line + " " + why);
+      if (bad) return json({ error: bad.startsWith("Links") ? "Bawal ang links sa application." : "Bawal ang bad words. Maging mabait tayo!" }, 400);
+      const dayAgo = Date.now() - 86400_000;
+      const recent = await db.prepare("SELECT id FROM npc_apps WHERE (voter = ? AND created > ?) OR (lower(username) = lower(?) AND status != 'hindi')").bind(me, dayAgo, username).first();
+      if (recent) return json({ error: "May application ka na! Hintayin mo muna ang sagot namin." }, 429);
+      const id = crypto.randomUUID().slice(0, 8);
+      await db.prepare("INSERT INTO npc_apps (id, username, display, role, fav, line, why, member, voter, created) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+        .bind(id, username, display, role, fav, line, why, body.member ? 1 : 0, me, Date.now()).run();
+      return json({ ok: true, id });
+    }
+
+    if (route === "npc-list" && method === "POST") {
+      const body = await request.json().catch(() => ({}));
+      if (!env.ADMIN_KEY || body.key !== env.ADMIN_KEY) return json({ error: "Wrong admin key." }, 403);
+      const { results } = await db.prepare("SELECT id, username, display, role, fav, line, why, member, created, status FROM npc_apps ORDER BY created DESC LIMIT 300").all();
+      return json({ items: results });
+    }
+
     if (route === "admin" && method === "POST") {
       const body = await request.json().catch(() => ({}));
       if (!env.ADMIN_KEY || body.key !== env.ADMIN_KEY) return json({ error: "Wrong admin key." }, 403);
       const sid = clean(body.id, 16);
-      if (body.action === "hide") await db.prepare("UPDATE suggestions SET hidden = 1 WHERE id = ?").bind(sid).run();
+      if (body.action === "npc-status" && NPC_STATUSES.includes(body.status)) await db.prepare("UPDATE npc_apps SET status = ? WHERE id = ?").bind(body.status, sid).run();
+      else if (body.action === "npc-delete") await db.prepare("DELETE FROM npc_apps WHERE id = ?").bind(sid).run();
+      else if (body.action === "hide") await db.prepare("UPDATE suggestions SET hidden = 1 WHERE id = ?").bind(sid).run();
       else if (body.action === "status" && STATUSES.includes(body.status)) await db.prepare("UPDATE suggestions SET status = ? WHERE id = ?").bind(body.status, sid).run();
       else return json({ error: "Unknown action." }, 400);
       return json({ ok: true });
