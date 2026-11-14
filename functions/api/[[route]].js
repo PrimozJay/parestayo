@@ -1,5 +1,3 @@
-// Pares Tayo HQ suggestion box API (Cloudflare Pages Functions + D1).
-// Needs a D1 binding named DB. Optional secret ADMIN_KEY enables moderation.
 const CATS = ["Feature", "Food & recipes", "Map", "Bug", "Other"];
 const STATUSES = ["", "planned", "added", "no"];
 const BAD = ["tangina", "putang", "gago", "fuck", "shit", "bitch", "nigg", "puta", "ulol", "pakyu"];

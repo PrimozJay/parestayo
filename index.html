@@ -11,7 +11,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Fredoka:wght@400;500;600;700&display=swap">
 <style id="css">
-/* Layout: one night-market column — string lights, hero with the update countdown, then news, roadmap, leaks, suggestion box. Single dark look by choice (the game's paresan at night). */
 :root {
   color-scheme: dark;
   --night: #1b0f22;
@@ -50,14 +49,12 @@ button, input, select, textarea { font: inherit; color: inherit; }
 :focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
 .wrap { max-width: 1040px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
 
-/* string lights */
 .lights { position: relative; height: 54px; overflow: hidden; }
 .lights svg { position: absolute; inset: 0; width: 100%; height: 100%; }
 .bulbs { position: absolute; inset: 0; }
 .bulb { position: absolute; width: 12px; height: 16px; border-radius: 50%; background: var(--bulb); box-shadow: 0 0 14px 4px rgba(255, 207, 140, .45); transform: translate(-50%, -50%); animation: glow 3.2s ease-in-out infinite; }
 @keyframes glow { 50% { opacity: .55; box-shadow: 0 0 6px 1px rgba(255, 207, 140, .3); } }
 
-/* hero */
 .hero { padding-block: 18px 34px; background: radial-gradient(120% 90% at 50% 110%, #b5482a 0%, #5b2240 42%, var(--night) 75%); }
 .hero-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 28px; align-items: center; }
 .brand { margin: 0; font-family: var(--display); font-weight: 400; line-height: .9; letter-spacing: .02em; font-size: clamp(54px, 10vw, 112px); }
@@ -74,7 +71,6 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .btn-small { padding: 7px 14px; font-size: 14px; }
 .btn-danger { background: transparent; color: #ff9b9b; border: 2px solid #6a2a3a; }
 
-/* the bowl + countdown card */
 .drop { background: var(--surface); border: 2px solid var(--line); border-radius: 22px; padding: 22px; position: relative; overflow: hidden; }
 .drop-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .eyebrow { font-size: 13px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--bulb); }
@@ -88,21 +84,18 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .bowl-meter svg { width: 100%; height: auto; display: block; }
 .soon { font-family: var(--display); font-weight: 400; font-size: 30px; color: var(--gold); margin: 4px 0 0; }
 
-/* nav */
 .nav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: rgba(27, 15, 34, .92); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
 .nav .wrap { display: flex; flex-wrap: wrap; gap: 4px 6px; padding-block: 8px; }
 .nav a { flex: none; text-decoration: none; color: var(--muted); font-weight: 600; padding: 7px 14px; border-radius: 999px; }
 @media (max-width: 480px) { .nav a { padding: 6px 10px; font-size: 14px; } .clock { gap: 6px; } .drop { padding: 18px; } .idea { gap: 10px; padding: 12px; } }
 .nav a:hover { color: var(--cream); background: var(--surface); }
 
-/* sections */
 main section { padding-block: 40px 8px; scroll-margin-top: 70px; }
 .sec-head { display: flex; align-items: end; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 18px; }
 .sec-head h2 { margin: 0; font-family: var(--display); font-weight: 400; font-size: clamp(30px, 5vw, 42px); letter-spacing: .02em; text-wrap: balance; }
 .sec-head p { margin: 4px 0 0; color: var(--muted); max-width: 60ch; }
 .empty { border: 2px dashed var(--line); border-radius: var(--radius); padding: 26px; text-align: center; color: var(--muted); }
 
-/* announcements */
 .news { display: grid; gap: 14px; }
 .post { background: var(--surface); border-radius: var(--radius); padding: 18px 20px; border: 2px solid var(--line); min-width: 0; }
 .post.pinned { border-color: var(--gold-2); }
@@ -117,7 +110,6 @@ main section { padding-block: 40px 8px; scroll-margin-top: 70px; }
 .post p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; max-width: 70ch; }
 .admin-row { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
 
-/* roadmap */
 .road { display: grid; gap: 10px; }
 .road-group { margin: 14px 0 0; font-family: var(--display); font-weight: 400; font-size: 24px; letter-spacing: .03em; color: var(--gold); }
 .road-group:first-child { margin-top: 0; }
@@ -132,7 +124,6 @@ main section { padding-block: 40px 8px; scroll-margin-top: 70px; }
 .st-planned .dot { background: var(--line); } .st-planned .chip { background: var(--surface-2); color: var(--muted); }
 .legend { display: flex; flex-wrap: wrap; gap: 14px; color: var(--muted); font-size: 14px; margin-top: 12px; }
 
-/* leaks */
 .leaks { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
 .leak { background: var(--surface); border-radius: var(--radius); overflow: hidden; border: 2px solid var(--line); display: flex; flex-direction: column; }
 .leak-img { position: relative; aspect-ratio: 16 / 10; background: var(--night-2); max-width: 100%; overflow: hidden; }
@@ -145,7 +136,6 @@ main section { padding-block: 40px 8px; scroll-margin-top: 70px; }
 .leak-body p { margin: 0; color: var(--muted); font-size: 15px; overflow-wrap: anywhere; }
 .noimg { display: grid; place-items: center; height: 100%; color: var(--muted); font-size: 14px; }
 
-/* suggestions */
 .suggest-grid { display: grid; grid-template-columns: 360px 1fr; gap: 20px; align-items: start; }
 .panel { background: var(--surface); border: 2px solid var(--line); border-radius: var(--radius); padding: 18px; min-width: 0; }
 .panel h3 { margin: 0 0 10px; font-size: 20px; }
@@ -172,7 +162,6 @@ textarea { min-height: 96px; resize: vertical; }
 .sort button { background: var(--surface); border: 2px solid var(--line); border-radius: 999px; padding: 5px 12px; cursor: pointer; font-size: 14px; }
 .sort button[aria-pressed=true] { border-color: var(--gold); color: var(--gold); }
 
-/* admin */
 .adminbar { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(14px + env(safe-area-inset-bottom, 0px)); z-index: 20; display: flex; gap: 10px; align-items: center; background: #120a18; border: 2px solid var(--gold-2); border-radius: 999px; padding: 8px 8px 8px 18px; box-shadow: 0 10px 30px rgba(0, 0, 0, .5); max-width: calc(100% - 32px); }
 .adminbar span { font-size: 14px; color: var(--muted); }
 .adminbar .dirty { color: var(--gold); font-weight: 700; }
@@ -193,7 +182,6 @@ footer a { color: var(--muted); }
   .road-edit { grid-template-columns: 1fr 1fr; }
   .road-edit input { grid-column: 1 / -1; }
 }
-/* hidden for now: suggestion box */
 #ideas { display: none !important; }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 </style>
@@ -278,7 +266,6 @@ footer a { color: var(--muted); }
   function fmtDate(iso) { var d = new Date(iso); return isNaN(d) ? "" : d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" }); }
   function toast(msg) { var t = el("div", "toast", msg); document.body.appendChild(t); setTimeout(function () { t.remove(); }, 2600); }
 
-  /* string lights */
   (function () {
     var b = $("bulbs"); if (!b) return;
     for (var i = 0; i <= 24; i++) {
@@ -288,7 +275,6 @@ footer a { color: var(--muted); }
     }
   })();
 
-  /* countdown */
   var tickTimer = null;
   function renderDrop() {
     var box = $("drop"); box.textContent = "";
@@ -316,7 +302,6 @@ footer a { color: var(--muted); }
       clearInterval(tickTimer); step(); tickTimer = setInterval(step, 1000);
     }
     if (c.note) box.appendChild(el("p", "drop-note", c.note));
-    /* bowl meter: how much of the roadmap is cooked */
     var items = state.update.items || [];
     if (items.some(function (it) { return it.status; })) {
       var score = 0; items.forEach(function (it) { score += it.status === "done" ? 1 : it.status === "cooking" ? 0.5 : 0; });
@@ -332,7 +317,6 @@ footer a { color: var(--muted); }
     }
   }
 
-  /* announcements */
   function renderNews() {
     var list = $("news-list"); list.textContent = "";
     var tools = $("news-tools"); tools.textContent = "";
@@ -359,7 +343,6 @@ footer a { color: var(--muted); }
     });
   }
 
-  /* roadmap */
   function renderRoad() {
     var u = state.update;
     $("update-title").textContent = "Next update";
@@ -387,7 +370,6 @@ footer a { color: var(--muted); }
     });
   }
 
-  /* leaks */
   function renderLeaks() {
     var tools = $("leak-tools"); tools.textContent = "";
     if (isAdmin) { var b = el("button", "btn btn-gold btn-small", "+ Add leak"); b.type = "button"; b.onclick = function () { editLeak(null); }; tools.appendChild(b); }
@@ -419,7 +401,6 @@ footer a { color: var(--muted); }
 
   function renderAll() { renderDrop(); renderNews(); renderRoad(); renderLeaks(); renderAdminBar(); }
 
-  /* ---------- admin editing ---------- */
   function markDirty() { dirty = true; renderAll(); }
   function sheet(title, build, onSave, saveLabel) {
     var wrap = el("div", "sheet"); var p = el("form", "panel"); p.autocomplete = "off";
@@ -560,7 +541,6 @@ footer a { color: var(--muted); }
   }
 
   renderAll();
-  /* ---------- suggestion box (Cloudflare Pages Functions + D1) ---------- */
   var sortMode = "top", ideas = [], adminKey = "";
   try { adminKey = localStorage.getItem("pt_admin") || ""; } catch (e) {}
   var MARKS = { planned: ["Planned", "mark-planned"], added: ["Added to the game", "mark-added"], no: ["Not this time", "mark-no"] };
@@ -626,7 +606,6 @@ footer a { color: var(--muted); }
   }
   window.addEventListener("hashchange", checkAdmin);
   checkAdmin();
-  /* loadIdeas(); suggestion box hidden for now */
 })();
 </script>
 
